@@ -23,14 +23,14 @@ function add(){
                 <td>${element.name}</td>
                 <td>${element.author}</td>
                 <td>${element.type}</td>
-                <td><button type="button" id="${index}" onclick="deleteBook(this.id)" class="btn btn-danger">Remove</button></td>
+                <td><button type="button" id="${index}" onclick="deleteBook(this.id)" class="btn btn-danger" style="font-size:0.87rem; width:4.7rem">Remove</button></td>
             </tr>`;
     });
     let tableBody=document.getElementById('tableBody')
     if(dataObj.length!=0){
         tableBody.innerHTML=html;
     }else{
-        tableBody.innerHTML="You haven't added any books, Please tap on Add book to Add a book"
+        tableBody.innerHTML="";
     }
 }
 
@@ -56,11 +56,6 @@ class Display{
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>`;
-
-        // To remain the showMsg Alert bar for 10sec
-        setTimeout(() => {
-            message.innerHTML=''
-        }, 10000);
     }
 }
 
@@ -111,24 +106,27 @@ function libraryFormSubmit(event){
 
     if(display.validate(book)){
         add();
-        display.showMsg('success','Your book has been added successfully')
         localStorage.setItem('Entries',JSON.stringify(book))
+        alert("Your book has been added Successfully")
+        display.clear();
     }
     else{
         display.showMsg('danger','Sorry you cannot add this book')
     }
-    
     event.preventDefault();
 }
 
 function deleteBook(index){
-    let data=localStorage.getItem('data');
-    if(data==null){
-        dataObj=[]
-    }else{
-        dataObj=JSON.parse(data);
+    let confirmDlt=confirm("Are you want to delete this book");
+    if(confirmDlt){
+        let data=localStorage.getItem('data');
+        if(data==null){
+            dataObj=[]
+        }else{
+            dataObj=JSON.parse(data);
+        }
+        dataObj.splice(index,1);
+        localStorage.setItem('data',JSON.stringify(dataObj));
+        add();
     }
-    dataObj.splice(index,1);
-    localStorage.setItem('data',JSON.stringify(dataObj));
-    add();
 }
